@@ -1,0 +1,170 @@
+FORMAT: 1A
+HOST: http://gordascolosio.com/web/
+
+# Products API Documentation
+Restaurant API
+
+# Allowed HTTPs requests:
+<pre>
+POST    : To create product
+PUT     : Update product
+GET     : Get a product or list of products
+DELETE  : To delete product
+</pre>
+
+# Description Server Responses:
+- 200 `OK` - the request was successful (some API calls may return 201 instead).
+- 201 `Created` - the request was successful and a product was created.
+- 204 `No Content` - the request was successful but there is no representation to return (i.e. the response is empty).
+- 400 `Bad Request` - the request could not be understood or was missing required parameters.
+- 401 `Unauthorized` - authentication failed or user doesn't have permissions for requested operation.
+- 403 `Forbidden` - access denied.
+- 404 `Not Found` - product was not found.
+- 405 `Method Not Allowed` - requested method is not supported for product.
+
+# Group Products
+Products that can be sold in the system.
+
+---
+**Products attributes:**
+
+- id `(Number)` : unique identifier.
+- product `(String)` : Product name.
+- price `(Double)` : Product price.
+- status `(Boolean)` : if the product is enable or disabled to be sold.
+- families_id `(Integer)` : The family of the product (Beverages, foods, desserts)
+- zones_id `(Integer)` : The zone of the restaurant which sell it (kitchen, bar)
+- image `(String)` : Image URL of the product
+---
+## Products Collection [/products(?since,limit)]
+### List all products [GET]
+Retrieve paginated list of products.
+
++ Parameters
+    + since (optional, String) ... Timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ` Only products updated at or after this time are returned.
+    + limit (optional, Number) ... maximum number of records expected by client.
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "1",
+                "producto": "CAFE AMERICANO",
+                "precio": "20",
+                "status": "1",
+                "familias_id": "2",
+                "zonas_id": "1",
+                "imagen": "https://url.com/image.png"
+            },
+            {
+                "id": "2",
+                "product": "CAFE CAPUCCINO",
+                "price": "35",
+                "status": "1",
+                "families_id": "2",
+                "zones_id": "1",
+                "image": "https://url.com/image.png"
+            }
+        ]
+
++ Response 401 (application/json)
+
+        {
+            "error": "error.unauthorized"
+        }
+
+### Create a Product [POST]
++ Request (application/json)
+
+        {
+                "producto": "CAFE DE OLLA",
+                "precio": "20",
+                "status": "1",
+                "familias_id": "2",
+                "zonas_id": "1",
+                "imagen": "https://url.com/image.png"
+        }
+
++ Response 201 (application/json)
+
+        {
+            "id": 3,
+            "producto": "CAFE DE OLLA",
+            "precio": "20",
+            "status": "1",
+            "familias_id": "2",
+            "zonas_id": "1",
+            "imagen": "https://url.com/image.png"
+        }
+
+## Product [/product/{id}]
+A single Product object with all its details
+
++ Parameters
+    + id (required, Number, `1`) ... Numeric `id` of the Product to perform action with.
+
+### Retrieve a Product [GET]
++ Response 200 (application/json)
+
+    + Header
+
+            X-My-Header: The Value
+
+    + Body
+
+            {
+            "id": 3,
+            "producto": "CAFE DE OLLA",
+            "precio": "20",
+            "status": "1",
+            "familias_id": "2",
+            "zonas_id": "1",
+            "imagen": "https://url.com/image.png"
+            }
+
++ Response 401 (application/json)
+
+        {
+            "error": "error.unauthorized"
+        }
+
+### Update a Product [PUT]
+Update product details
++ Request (application/json)
+
+        {
+            "id": 3,
+            "producto": "FRAPUCCINO",
+            "precio": "20",
+            "status": "1",
+            "familias_id": "2",
+            "zonas_id": "1",
+            "imagen": "https://url.com/image.png"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "id": 3,
+            "producto": "FRAPUCCINO",
+            "precio": "20",
+            "status": "1",
+            "familias_id": "2",
+            "zonas_id": "1",
+            "imagen": "https://url.com/image.png"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "error": "error.unauthorized"
+        }
+
+### Remove a Product [DELETE]
++ Response 204
+
++ Response 401 (application/json)
+
+        {
+            "error": "error.unauthorized"
+        }
